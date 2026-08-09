@@ -1,0 +1,1754 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小米MiMo 设计规范文档 | Design System</title>
+<style>
+  /* ============================================
+     MiMo Design System - 基于实际测量数据
+     ============================================ */
+  :root {
+    /* 色彩系统 */
+    --color-bg-primary: #FAF7F5;
+    --color-bg-secondary: #FFFFFF;
+    --color-bg-tertiary: #222427;
+    
+    --color-text-primary: #000000;
+    --color-text-secondary: #213547;
+    --color-text-tertiary: #333333;
+    --color-text-muted: #666666;
+    --color-text-subtle: #999999;
+    --color-text-ultra-subtle: rgba(0,0,0,0.4);
+    
+    --color-accent-teal: #5ED4AD;
+    --color-accent-blue: #0066FF;
+    --color-accent-cyan: #00AAFF;
+    
+    --color-border-primary: #000000;
+    --color-border-secondary: #E5E7EB;
+    --color-border-tertiary: rgba(60,60,60,0.1);
+    
+    /* 字体系统 */
+    --font-family-display: 'MiSans-Bold', 'MiSans-Semibold', 'MiSans-Regular', 'NotoSerifSC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    --font-family-heading: 'MiSans-Semibold', 'MiSans-Regular', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+    --font-family-body: 'MiSans-Regular', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --font-family-medium: 'MiSans-Medium', 'MiSans-Regular', sans-serif;
+    
+    /* 字号层级 */
+    --fs-h1: 56px;
+    --fs-h2: 40px;
+    --fs-h3-product: 24px;
+    --fs-h3: 20px;
+    --fs-h3-job: 17px;
+    --fs-body-large: 16px;
+    --fs-body: 15px;
+    --fs-body-small: 14px;
+    --fs-caption: 13px;
+    --fs-nav: 15px;
+    --fs-language: 14px;
+    
+    /* 行高 */
+    --lh-h1: 95.2px;
+    --lh-h2: 68px;
+    --lh-h3-product: 31.2px;
+    --lh-h3: 26px;
+    --lh-h3-job: 28.9px;
+    --lh-body-large: 27.2px;
+    --lh-body: 25.5px;
+    --lh-body-small: 21px;
+    --lh-caption: 19.5px;
+    --lh-nav: 25.5px;
+    
+    /* 字重 */
+    --fw-bold: 700;
+    --fw-semibold: 600;
+    --fw-medium: 500;
+    --fw-regular: 400;
+    
+    /* 字间距 */
+    --ls-h1: 1.12px;
+    --ls-h3-product: 0.24px;
+    --ls-normal: normal;
+    
+    /* 间距系统 - 基于 4px 基准 */
+    --sp-0: 0;
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 14px;
+    --sp-5: 16px;
+    --sp-6: 20px;
+    --sp-7: 24px;
+    --sp-8: 28px;
+    --sp-9: 32px;
+    --sp-10: 40px;
+    --sp-11: 56px;
+    --sp-12: 68px;
+    --sp-13: 95px;
+    
+    /* 圆角 */
+    --radius-none: 0;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    
+    /* 阴影 */
+    --shadow-none: none;
+    --shadow-soft: 0 1px 3px rgba(0,0,0,0.06);
+    
+    /* 动效 */
+    --transition-fast: 0.15s;
+    --transition-normal: 0.2s;
+    --transition-medium: 0.3s;
+    --transition-slow: 0.4s;
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-smooth: ease;
+    --ease-elastic: cubic-bezier(0.2, 0, 0.2, 1);
+    
+    /* 布局尺寸 */
+    --nav-height: 56px;
+    --hero-height: 600px;
+    --card-product-height: 312px;
+    --container-padding-sm: 24px;
+    --container-padding-lg: 28px;
+    
+    /* 响应式断点 */
+    --bp-mobile: 480px;
+    --bp-tablet: 768px;
+    --bp-laptop: 1024px;
+    --bp-desktop: 1200px;
+    --bp-wide: 1440px;
+    
+    /* z-index */
+    --z-nav: 20;
+    --z-overlay: 50;
+    --z-modal: 100;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: var(--font-family-body);
+    background: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+    line-height: var(--lh-body);
+    font-size: var(--fs-body);
+  }
+
+  .ds-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--sp-10) var(--sp-8);
+  }
+
+  .ds-header {
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-primary);
+    padding: var(--sp-10) 0 var(--sp-7);
+    margin-bottom: var(--sp-10);
+  }
+
+  .ds-header h1 {
+    font-family: var(--font-family-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-bold);
+    color: var(--color-text-primary);
+    letter-spacing: var(--ls-normal);
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--sp-8);
+    line-height: var(--lh-h2);
+  }
+
+  .ds-header p {
+    max-width: 1280px;
+    margin: var(--sp-2) auto 0;
+    padding: 0 var(--sp-8);
+    font-size: var(--fs-body-large);
+    color: var(--color-text-muted);
+    line-height: var(--lh-body-large);
+  }
+
+  .ds-section {
+    margin-bottom: var(--sp-11);
+  }
+
+  .ds-section-title {
+    font-family: var(--font-family-heading);
+    font-size: var(--fs-h3-product);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-h3-product);
+    color: var(--color-text-primary);
+    margin-bottom: var(--sp-7);
+    padding-bottom: var(--sp-3);
+    border-bottom: 1px solid var(--color-border-secondary);
+    letter-spacing: var(--ls-h3-product);
+  }
+
+  .ds-subsection {
+    margin-bottom: var(--sp-7);
+  }
+
+  .ds-subsection-title {
+    font-family: var(--font-family-heading);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-h3);
+    color: var(--color-text-primary);
+    margin-bottom: var(--sp-5);
+  }
+
+  .ds-desc {
+    font-size: var(--fs-body-small);
+    color: var(--color-text-muted);
+    line-height: var(--lh-body-small);
+    margin-bottom: var(--sp-5);
+  }
+
+  /* ===== 色彩展示 ===== */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--sp-5);
+  }
+
+  .color-swatch {
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .color-block {
+    height: 100px;
+  }
+
+  .color-info {
+    padding: var(--sp-4);
+    background: var(--color-bg-secondary);
+  }
+
+  .color-name {
+    font-family: var(--font-family-medium);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-primary);
+    margin-bottom: var(--sp-1);
+  }
+
+  .color-codes {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    line-height: 1.8;
+  }
+
+  .color-usage {
+    margin-top: var(--sp-2);
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    line-height: 1.6;
+  }
+
+  /* ===== 排版展示 ===== */
+  .type-samples {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-8);
+  }
+
+  .type-item {
+    padding: var(--sp-5) 0;
+    border-bottom: 1px solid var(--color-border-secondary);
+  }
+
+  .type-item:last-child { border-bottom: none; }
+
+  .type-label {
+    display: inline-block;
+    min-width: 120px;
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    margin-right: var(--sp-5);
+  }
+
+  .type-specs {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin-top: var(--sp-2);
+  }
+
+  /* ===== 组件展示 ===== */
+  .component-demo {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-8);
+    margin-bottom: var(--sp-5);
+  }
+
+  .demo-label {
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--sp-5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* 卡片 */
+  .ds-card {
+    background: var(--color-bg-primary);
+    border-top: 1px solid var(--color-border-primary);
+    border-bottom: 1px solid var(--color-border-primary);
+    min-height: 200px;
+    display: flex;
+    align-items: flex-end;
+    cursor: pointer;
+    transition: var(--transition-normal) var(--ease-smooth);
+  }
+
+  .ds-card-content {
+    padding: var(--sp-7) var(--sp-8);
+    width: 100%;
+  }
+
+  .ds-card-title {
+    font-family: var(--font-family-heading);
+    font-size: var(--fs-h3-product);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-h3-product);
+    letter-spacing: var(--ls-h3-product);
+    color: var(--color-text-primary);
+    margin-bottom: var(--sp-1);
+  }
+
+  .ds-card-subtitle {
+    font-size: var(--fs-caption);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-caption);
+    color: var(--color-text-ultra-subtle);
+  }
+
+  /* 列表卡片 */
+  .ds-list-card {
+    background: var(--color-bg-primary);
+    padding: var(--sp-7) var(--sp-6);
+    cursor: pointer;
+    transition: var(--transition-slow) var(--ease-smooth);
+  }
+
+  .ds-list-title {
+    font-family: var(--font-family-heading);
+    font-size: var(--fs-h3);
+    font-weight: var(--fw-semibold);
+    line-height: var(--lh-h3);
+    color: var(--color-text-primary);
+    margin-bottom: var(--sp-2);
+  }
+
+  .ds-list-desc {
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-body-small);
+    color: var(--color-text-muted);
+  }
+
+  /* 按钮 */
+  .ds-nav-btn {
+    font-family: var(--font-family-medium);
+    font-size: var(--fs-nav);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-nav);
+    color: var(--color-text-primary);
+    padding: var(--sp-2) var(--sp-3);
+    margin: 0 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-normal) var(--ease-standard);
+  }
+
+  .ds-nav-btn:hover { opacity: 0.7; }
+
+  .ds-nav-link {
+    display: inline-block;
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-nav);
+    font-weight: var(--fw-regular);
+    line-height: var(--lh-nav);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    transition: background var(--transition-fast) var(--ease-smooth), color var(--transition-fast) var(--ease-smooth);
+  }
+
+  .ds-nav-link:hover { background: var(--color-border-secondary); }
+
+  /* 代码块 */
+  pre.code-block {
+    background: var(--color-bg-tertiary);
+    color: var(--color-bg-primary);
+    padding: var(--sp-7);
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  code { font-family: inherit; }
+
+  .code-comment { color: #9CA3AF; }
+  .code-prop { color: #93C5FD; }
+  .code-value { color: #86EFAC; }
+  .code-var { color: #FDE68A; }
+
+  /* 检查清单 */
+  .checklist {
+    list-style: none;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-7);
+  }
+
+  .checklist li {
+    padding: var(--sp-3) 0 var(--sp-3) 32px;
+    position: relative;
+    border-bottom: 1px solid var(--color-border-secondary);
+    font-size: var(--fs-body);
+    line-height: 1.7;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-border-primary);
+    background: var(--color-bg-secondary);
+  }
+
+  /* 分隔线 */
+  .ds-rule {
+    border: none;
+    border-top: 1px solid var(--color-border-primary);
+    margin: var(--sp-11) 0;
+  }
+
+  /* 测量示意图 */
+  .spacing-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+    align-items: flex-end;
+  }
+
+  .spacing-block {
+    background: var(--color-accent-teal);
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-bg-secondary);
+    font-family: 'SF Mono', monospace;
+    font-size: 11px;
+    min-width: 40px;
+  }
+
+  /* Hero 预览 */
+  .hero-preview {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border-secondary);
+    padding: var(--sp-8);
+    border-radius: var(--radius-sm);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-pattern {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    gap: 0;
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  .hero-pattern-row {
+    display: flex;
+    overflow: hidden;
+  }
+
+  .hero-pattern-text {
+    font-family: var(--font-family-display);
+    font-size: 80px;
+    font-weight: var(--fw-bold);
+    color: var(--color-text-primary);
+    letter-spacing: 8px;
+    white-space: nowrap;
+    animation: heroMarquee 20s linear infinite;
+  }
+
+  .hero-pattern-row:nth-child(even) .hero-pattern-text {
+    animation-direction: reverse;
+  }
+
+  @keyframes heroMarquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .hero-content-preview {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-h1 {
+    font-family: var(--font-family-display);
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-bold);
+    line-height: var(--lh-h1);
+    letter-spacing: var(--ls-h1);
+    color: var(--color-text-primary);
+  }
+
+  /* 表格 */
+  .ds-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .ds-table th,
+  .ds-table td {
+    padding: var(--sp-4) var(--sp-5);
+    text-align: left;
+    border-bottom: 1px solid var(--color-border-secondary);
+    font-size: var(--fs-body-small);
+    line-height: 1.6;
+  }
+
+  .ds-table th {
+    background: var(--color-bg-primary);
+    font-family: var(--font-family-medium);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-primary);
+    font-size: var(--fs-body-small);
+  }
+
+  .ds-table tr:last-child td { border-bottom: none; }
+
+  /* 图标 */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: var(--sp-5);
+  }
+
+  .icon-box {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm);
+    padding: var(--sp-4);
+  }
+
+  .icon-svg {
+    width: 32px;
+    height: 32px;
+    stroke: var(--color-text-primary);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .icon-label {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  /* 响应式提示 */
+  .responsive-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 4px var(--sp-3);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+
+  .badge strong {
+    color: var(--color-text-primary);
+    font-weight: var(--fw-medium);
+  }
+
+  .tip-box {
+    background: rgba(94, 212, 173, 0.08);
+    border-left: 4px solid var(--color-accent-teal);
+    padding: var(--sp-5) var(--sp-6);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: var(--sp-5) 0;
+  }
+
+  .tip-box p {
+    font-size: var(--fs-body-small);
+    line-height: var(--lh-body-small);
+    color: var(--color-text-secondary);
+  }
+
+  .tip-box strong {
+    display: block;
+    color: var(--color-text-primary);
+    font-weight: var(--fw-semibold);
+    margin-bottom: var(--sp-1);
+  }
+
+  .nav-preview {
+    height: 56px;
+    background: var(--color-bg-secondary);
+    border-top: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--sp-8);
+    border: 1px solid var(--color-border-secondary);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border-bottom: none;
+  }
+
+  .nav-logo {
+    font-family: var(--font-family-display);
+    font-weight: var(--fw-bold);
+    font-size: 18px;
+    color: var(--color-text-primary);
+  }
+
+  .nav-items {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-1);
+  }
+</style>
+</head>
+<body>
+
+<header class="ds-header">
+  <h1>小米 MiMo 设计规范文档</h1>
+  <p>基于 https://mimo.xiaomi.com/index 实际页面测量数据 | 版本 1.0 | 生成日期 2026-08-01</p>
+</header>
+
+<div class="ds-container">
+
+  <!-- 目录 -->
+  <section class="ds-section">
+    <h2 class="ds-section-title">📋 目录导航</h2>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: var(--sp-3);">
+      <a href="#color" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">🎨 1. 色彩系统</a>
+      <a href="#typography" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">📐 2. 排版系统</a>
+      <a href="#fonts" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">🔤 3. 字体系统</a>
+      <a href="#icons" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">✨ 4. 图标系统</a>
+      <a href="#animation" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">🎬 5. 交互动效</a>
+      <a href="#spacing" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">📏 6. 空间关系</a>
+      <a href="#components" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">🧩 7. 组件规范</a>
+      <a href="#responsive" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">📱 8. 响应式设计</a>
+      <a href="#checklist" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">✅ 9. 一致性检查清单</a>
+      <a href="#tech" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">⚙️ 10. 技术建议</a>
+      <a href="#css" style="padding:var(--sp-4);background:var(--color-bg-secondary);border:1px solid var(--color-border-secondary);border-radius:var(--radius-sm);text-decoration:none;color:var(--color-text-secondary);font-size:var(--fs-body-small);">💻 11. CSS 变量全集</a>
+    </div>
+  </section>
+
+  <!-- 1. 色彩系统 -->
+  <section id="color" class="ds-section">
+    <h2 class="ds-section-title">🎨 一、色彩系统</h2>
+    <p class="ds-desc">
+      MiMo 采用极简、克制的配色策略：以 <strong>暖灰白 (#FAF7F5)</strong> 为基调，搭配纯黑文字与黑色分隔线，
+      构建出干净、理性、具有人文气息的视觉氛围。点缀色（如青绿 #5ED4AD）极少出现，仅用于特定功能区域。
+      整体遵循「少即是多」的小米设计哲学。
+    </p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">1.1 背景色 (Background)</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#FAF7F5;"></div>
+          <div class="color-info">
+            <div class="color-name">背景主色 Primary</div>
+            <div class="color-codes">
+              HEX: #FAF7F5<br>
+              RGB: 250, 247, 245<br>
+              CMYK: 0, 1, 2, 2
+            </div>
+            <div class="color-usage">✅ 页面主背景、卡片背景、区块底色</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#FFFFFF;"></div>
+          <div class="color-info">
+            <div class="color-name">背景次色 Secondary</div>
+            <div class="color-codes">
+              HEX: #FFFFFF<br>
+              RGB: 255, 255, 255<br>
+              CMYK: 0, 0, 0, 0
+            </div>
+            <div class="color-usage">✅ 导航栏背景、弹窗、特殊卡片</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#222427;"></div>
+          <div class="color-info">
+            <div class="color-name">深色背景 Tertiary</div>
+            <div class="color-codes">
+              HEX: #222427<br>
+              RGB: 34, 36, 39<br>
+              CMYK: 13, 8, 0, 85
+            </div>
+            <div class="color-usage">✅ 代码块、暗色模式、底部区域</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">1.2 文字色 (Text)</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#000000;"></div>
+          <div class="color-info">
+            <div class="color-name">文字主色 Primary</div>
+            <div class="color-codes">
+              HEX: #000000<br>
+              RGB: 0, 0, 0<br>
+              CMYK: 0, 0, 0, 100
+            </div>
+            <div class="color-usage">✅ H1-H3大标题、按钮文字、Logo</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#213547;"></div>
+          <div class="color-info">
+            <div class="color-name">文字次色 Secondary</div>
+            <div class="color-codes">
+              HEX: #213547<br>
+              RGB: 33, 53, 71<br>
+              CMYK: 54, 25, 0, 72
+            </div>
+            <div class="color-usage">✅ 正文段落、卡片基础文字</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#333333;"></div>
+          <div class="color-info">
+            <div class="color-name">文字三级 Tertiary</div>
+            <div class="color-codes">
+              HEX: #333333<br>
+              RGB: 51, 51, 51<br>
+              CMYK: 0, 0, 0, 80
+            </div>
+            <div class="color-usage">✅ 介绍段落、描述文字</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#666666;"></div>
+          <div class="color-info">
+            <div class="color-name">辅助文字 Muted</div>
+            <div class="color-codes">
+              HEX: #666666<br>
+              RGB: 102, 102, 102<br>
+              CMYK: 0, 0, 0, 60
+            </div>
+            <div class="color-usage">✅ 副标题、日期、卡片描述</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#999999;"></div>
+          <div class="color-info">
+            <div class="color-name">次要文字 Subtle</div>
+            <div class="color-codes">
+              HEX: #999999<br>
+              RGB: 153, 153, 153<br>
+              CMYK: 0, 0, 0, 40
+            </div>
+            <div class="color-usage">✅ Hamburger 图标、辅助说明</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:rgba(0,0,0,0.4);"></div>
+          <div class="color-info">
+            <div class="color-name">极淡文字 Ultra</div>
+            <div class="color-codes">
+              RGBA: rgba(0,0,0,0.4)<br>
+              约当 HEX: #666666 @40%<br>
+              RGB: 0, 0, 0 (alpha 0.4)
+            </div>
+            <div class="color-usage">✅ 产品卡片副标题、弱化提示</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">1.3 强调/点缀色 (Accent)</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#5ED4AD;"></div>
+          <div class="color-info">
+            <div class="color-name">青绿 Teal</div>
+            <div class="color-codes">
+              HEX: #5ED4AD<br>
+              RGB: 94, 212, 173<br>
+              CMYK: 56, 0, 18, 17
+            </div>
+            <div class="color-usage">✅ 功能标记、成功状态、特殊背景块</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:linear-gradient(90deg,#0066FF,#00AAFF);"></div>
+          <div class="color-info">
+            <div class="color-name">蓝色渐变 Blue Gradient</div>
+            <div class="color-codes">
+              从: #0066FF → #00AAFF<br>
+              方向: 90deg (水平)<br>
+              角度: 线性渐变
+            </div>
+            <div class="color-usage">✅ 特殊高亮、小元素装饰</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">1.4 分隔线/边框色 (Border)</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-block" style="background:#000000;"></div>
+          <div class="color-info">
+            <div class="color-name">主边框 Primary</div>
+            <div class="color-codes">
+              HEX: #000000<br>
+              宽度: 1px<br>
+              样式: solid
+            </div>
+            <div class="color-usage">✅ 区块上下分隔、卡片上下分隔<br>⚠️ 体现高级感的关键设计语言</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-block" style="background:#E5E7EB;"></div>
+          <div class="color-info">
+            <div class="color-name">次边框 Secondary</div>
+            <div class="color-codes">
+              HEX: #E5E7EB<br>
+              RGB: 229, 231, 235<br>
+              CMYK: 3, 2, 0, 8
+            </div>
+            <div class="color-usage">✅ 卡片内部分隔、按钮hover背景、轻微分隔</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>🎯 色彩应用核心规则</strong>
+      <p>
+        1. <strong>大面积永远是 #FAF7F5</strong>：主背景必须使用暖灰白色，纯白只在特定容器内出现<br>
+        2. <strong>分隔线必须用纯黑 1px</strong>：区块与区块之间、产品卡片之间，用黑色实线分隔是 MiMo 的标志性语言<br>
+        3. <strong>强调色要「吝啬」使用</strong>：青绿色和蓝色渐变只在需要突出的地方出现，不超过页面元素的 5%<br>
+        4. <strong>文字对比度必须足够</strong>：正文 ≥ #333333，只有辅助文字可到 #666666 或更低
+      </p>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 2. 排版系统 -->
+  <section id="typography" class="ds-section">
+    <h2 class="ds-section-title">📐 二、排版系统</h2>
+    <p class="ds-desc">
+      MiMo 采用「大留白 + 单列纵向流动」的极简排版策略。网格结构清晰，模块之间以 1px 黑线分隔，
+      创造出节奏感十足的垂直阅读体验。
+    </p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">2.1 页面整体结构</h3>
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th>区域 (Section)</th>
+            <th>高度/尺寸</th>
+            <th>上下内边距</th>
+            <th>左右内边距</th>
+            <th>分隔线</th>
+            <th>背景色</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>导航栏 Nav</td><td>高度 56px（固定吸顶）</td><td>0</td><td>0 (容器控制)</td><td>无</td><td>#FFFFFF / 透明</td></tr>
+          <tr><td>Hero 主视觉</td><td>高度 600px</td><td>0</td><td>28px (sm: 24px)</td><td>上下 1px 纯黑</td><td>#FAF7F5 + 文字图案</td></tr>
+          <tr><td>产品卡片组 Product</td><td>单卡高度 312px</td><td>0</td><td>内容区 28px</td><td>卡片间 1px 纯黑</td><td>透明（继承父背景）</td></tr>
+          <tr><td>Build with MiMo</td><td>自适应</td><td>顶部留白</td><td>20-28px</td><td>无 / 可选</td><td>#FAF7F5</td></tr>
+          <tr><td>Paper 论文列表</td><td>自适应</td><td>卡片内 24px 上下</td><td>卡片内 20px 左右</td><td>无线（列表式）</td><td>#FAF7F5</td></tr>
+          <tr><td>Blog 博客列表</td><td>自适应</td><td>卡片内 24px 上下</td><td>卡片内 20px 左右</td><td>无线（列表式）</td><td>#FAF7F5</td></tr>
+          <tr><td>Join Us 加入我们</td><td>自适应</td><td>40px 上下</td><td>24px 左右</td><td>无线</td><td>#FAF7F5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">2.2 布局节奏 (Rhythm)</h3>
+      <p class="ds-desc">
+        MiMo 的页面节奏由「大标题 (h2 40px) → 内容卡片」的重复模式构成，每一个主要区块（Section）都遵循以下内部结构：
+      </p>
+      <div class="component-demo">
+        <div class="demo-label">标准区块内排版节奏（自上而下）</div>
+        <div style="background:var(--color-bg-primary); border:1px solid var(--color-border-secondary); padding: 0 28px;">
+          <div style="padding:20px 0; font-size:40px; font-weight:700; line-height:68px; color:#000; border-bottom:1px solid transparent;">
+            H2 区块标题 (40px / 700 / line-height 68px)
+          </div>
+          <div style="padding:24px 0 24px 0;">
+            <div style="font-size:20px; font-weight:600; line-height:26px; margin-bottom:8px;">卡片/列表标题 (20px / 600)</div>
+            <div style="font-size:14px; font-weight:400; line-height:21px; color:#666;">卡片副标题/描述/日期 (14px / 400 / color #666)</div>
+          </div>
+          <div style="padding:24px 0 24px 0; border-top:1px solid var(--color-border-secondary);">
+            <div style="font-size:20px; font-weight:600; line-height:26px; margin-bottom:8px;">第二条卡片 (同样式重复)</div>
+            <div style="font-size:14px; font-weight:400; line-height:21px; color:#666;">描述文字保持一致风格</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">2.3 响应式断点</h3>
+      <p class="ds-desc">基于实际页面表现推断的断点设置：</p>
+      <div class="responsive-badges">
+        <span class="badge">📱 <strong>Mobile S</strong> ≤ 375px</span>
+        <span class="badge">📱 <strong>Mobile</strong> ≤ 480px</span>
+        <span class="badge">📱 <strong>Mobile</strong> 触发 Hamburger</span>
+        <span class="badge">📱 <strong>Tablet</strong> ≤ 768px</span>
+        <span class="badge">💻 <strong>Laptop</strong> ≤ 1024px</span>
+        <span class="badge">🖥️ <strong>Desktop</strong> ≤ 1200px</span>
+        <span class="badge">🖥️ <strong>Wide</strong> ≤ 1440px+</span>
+      </div>
+      <div class="tip-box" style="margin-top:24px;">
+        <strong>📱 移动端关键特征</strong>
+        <p>
+          1. 导航栏显示 Hamburger 图标（36×56px 尺寸）<br>
+          2. Hero 主标题自动缩小，容器左右 Padding 为 24px<br>
+          3. 单列纵向流式布局，不出现多列并排<br>
+          4. 卡片内容左右 Padding 从 28px 缩至 24px
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 3. 字体系统 -->
+  <section id="fonts" class="ds-section">
+    <h2 class="ds-section-title">🔤 三、字体系统</h2>
+    <p class="ds-desc">
+      MiMo 使用小米自研 <strong>MiSans</strong> 字体家族作为核心字体，配合系统字体回退链。
+      字体层级鲜明，从 Hero 区的 56px 大字到 Caption 的 13px，共定义 9 个字号档位。
+    </p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">3.1 字体回退链 (Font Family Stack)</h3>
+<pre class="code-block"><code><span class="code-comment">/* 大标题 / Hero */</span>
+<span class="code-prop">--font-family-display</span>: <span class="code-value">'MiSans-Bold', 'MiSans-Semibold', 'MiSans-Regular', 'NotoSerifSC',
+  -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif</span>;
+
+<span class="code-comment">/* 小标题 */</span>
+<span class="code-prop">--font-family-heading</span>: <span class="code-value">'MiSans-Semibold', 'MiSans-Regular', -apple-system,
+  BlinkMacSystemFont, 'PingFang SC', sans-serif</span>;
+
+<span class="code-comment">/* 正文 */</span>
+<span class="code-prop">--font-family-body</span>: <span class="code-value">'MiSans-Regular', -apple-system, BlinkMacSystemFont,
+  'PingFang SC', 'Microsoft YaHei', sans-serif</span>;
+
+<span class="code-comment">/* 中等权重（按钮/导航） */</span>
+<span class="code-prop">--font-family-medium</span>: <span class="code-value">'MiSans-Medium', 'MiSans-Regular', sans-serif</span>;</code></pre>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">3.2 完整字号层级表</h3>
+      <div class="type-samples">
+        <div class="type-item">
+          <span class="type-label">H1 / Hero</span>
+          <span style="font-family:var(--font-family-display);font-size:56px;font-weight:700;line-height:95.2px;letter-spacing:1.12px;color:#000;">HELLO, I'M MiMo</span>
+          <div class="type-specs">font-size: 56px | font-weight: 700 | line-height: 95.2px (170%) | letter-spacing: 1.12px | 场景: Hero 主标题</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">H2 / Section</span>
+          <span style="font-family:var(--font-family-heading);font-size:40px;font-weight:700;line-height:68px;color:#000;">Build with MiMo</span>
+          <div class="type-specs">font-size: 40px | font-weight: 700 | line-height: 68px (170%) | letter-spacing: normal | 场景: 各区块大标题</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">H3 (产品卡)</span>
+          <span style="font-family:var(--font-family-heading);font-size:24px;font-weight:600;line-height:31.2px;letter-spacing:0.24px;color:#000;">Xiaomi MiMo-V2.5-Pro</span>
+          <div class="type-specs">font-size: 24px | font-weight: 600 | line-height: 31.2px (130%) | letter-spacing: 0.24px | 场景: Hero区下方产品卡片</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">H3 (列表卡)</span>
+          <span style="font-family:var(--font-family-heading);font-size:20px;font-weight:600;line-height:26px;color:#000;">Web Demo / Paper标题</span>
+          <div class="type-specs">font-size: 20px | font-weight: 600 | line-height: 26px (130%) | letter-spacing: normal | 场景: Paper/Blog/功能列表项标题</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">H3 (职位卡)</span>
+          <span style="font-family:var(--font-family-heading);font-size:17px;font-weight:600;line-height:28.9px;color:#000;">Research Scientist</span>
+          <div class="type-specs">font-size: 17px | font-weight: 600 | line-height: 28.9px (170%) | letter-spacing: normal | 场景: Join Us 职位卡片标题</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">Body Large</span>
+          <span style="font-family:var(--font-family-body);font-size:16px;font-weight:400;line-height:27.2px;color:#333547;">正文大段介绍文字，描述品牌理念或功能介绍。</span>
+          <div class="type-specs">font-size: 16px | font-weight: 400 | line-height: 27.2px (170%) | 场景: Join Us 介绍段落</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">Body Medium</span>
+          <span style="font-family:var(--font-family-body);font-size:15px;font-weight:400;line-height:25.5px;color:#000;">MiMo Code / Blog 链接</span>
+          <div class="type-specs">font-size: 15px | font-weight: 400 | line-height: 25.5px (170%) | 场景: 导航下拉项、次要链接</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">Body Small</span>
+          <span style="font-family:var(--font-family-body);font-size:14px;font-weight:400;line-height:21px;color:#666;">Interact with MiMo directly through the web</span>
+          <div class="type-specs">font-size: 14px | font-weight: 400 | line-height: 21px (150%) | 场景: 卡片副标题、日期、辅助说明</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">Caption</span>
+          <span style="font-family:var(--font-family-body);font-size:13px;font-weight:400;line-height:19.5px;color:rgba(0,0,0,0.4);">产品卡片副标题弱化提示文字</span>
+          <div class="type-specs">font-size: 13px | font-weight: 400 | line-height: 19.5px (150%) | 场景: 产品卡副标题、极弱信息</div>
+        </div>
+        <div class="type-item">
+          <span class="type-label">Nav / Medium</span>
+          <span style="font-family:var(--font-family-medium);font-size:15px;font-weight:500;line-height:25.5px;color:#000;">Product / Research / Join Us</span>
+          <div class="type-specs">font-size: 15px | font-weight: 500 | line-height: 25.5px (170%) | 场景: 导航栏按钮</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>🔤 字体应用核心规则</strong>
+      <p>
+        1. <strong>行高规律</strong>：大标题行高约 170%，小标题行高约 130%，正文行高约 150-170%<br>
+        2. <strong>字重策略</strong>：Hero 必用 700，区块标题 700，卡片标题 600，导航 500，正文一律 400<br>
+        3. <strong>字间距</strong>：H1 和 24px 产品标题使用额外字间距（1.12px / 0.24px），增加呼吸感<br>
+        4. <strong>颜色区分层级</strong>：黑色 = 标题，#213547 = 正文，#666666 = 副信息，rgba(0,0,0,0.4) = 极弱信息
+      </p>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 4. 图标系统 -->
+  <section id="icons" class="ds-section">
+    <h2 class="ds-section-title">✨ 四、图标系统</h2>
+    <p class="ds-desc">
+      MiMo 网站的图标使用非常克制，主要以 SVG 图标呈现。整体风格为<strong>极简几何、面性填充</strong>或
+      <strong>单线条</strong>，配合 16px 和 32px 两种标准尺寸。
+    </p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">4.1 图标设计风格</h3>
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th>属性</th>
+            <th>规范</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>视觉风格</td><td>极简几何 / 面性 + 线性</td><td>Logo为面性填充，下拉箭头为线条，整体无多余装饰</td></tr>
+          <tr><td>标准尺寸</td><td>16px · 32px</td><td>下拉/导航小图标 16px；Hamburger 等特殊图标 32px</td></tr>
+          <tr><td>SVG viewBox</td><td>0 0 32 32 (通用)</td><td>所有图标共享同一 viewBox 以确保对齐一致</td></tr>
+          <tr><td>描边宽度</td><td>1px - 1.5px</td><td>线描图标 stroke-width 不超过 1.5</td></tr>
+          <tr><td>配色策略</td><td>继承父元素颜色</td><td>fill / stroke 设为 currentColor，便于跟随文字色</td></tr>
+          <tr><td>圆角处理</td><td>stroke-linecap: round</td><td>端点与转折均采用圆角处理，体现柔和感</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">4.2 常用图标示例</h3>
+      <div class="icon-grid">
+        <div class="icon-box">
+          <svg class="icon-svg" viewBox="0 0 32 32"><path d="M6 9h20M6 16h20M6 23h20"/></svg>
+          <span class="icon-label">Hamburger 32px</span>
+        </div>
+        <div class="icon-box">
+          <svg class="icon-svg" viewBox="0 0 32 32" style="width:16px;height:16px;"><path d="M10 12l6 6 6-6"/></svg>
+          <span class="icon-label">下拉箭头 16px</span>
+        </div>
+        <div class="icon-box">
+          <svg class="icon-svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="currentColor"/></svg>
+          <span class="icon-label">圆形 Logo 元素</span>
+        </div>
+        <div class="icon-box">
+          <svg class="icon-svg" viewBox="0 0 32 32"><rect x="6" y="6" width="20" height="20" rx="2"/></svg>
+          <span class="icon-label">卡片图标</span>
+        </div>
+        <div class="icon-box">
+          <svg class="icon-svg" viewBox="0 0 32 32"><path d="M22 6h-5l-2-2h-6L7 8v18a2 2 0 002 2h13l5-5V8a2 2 0 00-2-2z"/></svg>
+          <span class="icon-label">文档图标</span>
+        </div>
+        <div class="icon-box">
+          <svg class="icon-svg" viewBox="0 0 32 32"><path d="M16 4l12 6v12l-12 6L4 22V10z"/></svg>
+          <span class="icon-label">AI 模型图标</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 5. 交互动效 -->
+  <section id="animation" class="ds-section">
+    <h2 class="ds-section-title">🎬 五、交互动效系统</h2>
+    <p class="ds-desc">
+      MiMo 追求「克制但到位」的交互反馈。动效节奏偏缓（0.2s-0.4s），
+      不使用夸张的弹跳或缩放效果，以透明度、颜色渐变等温和过渡为主。
+    </p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">5.1 过渡参数总表</h3>
+      <table class="ds-table">
+        <thead>
+          <tr><th>元素类型</th><th>过渡时长</th><th>缓动曲线</th><th>过渡属性</th><th>效果说明</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>导航链接 (a)</td><td>0.2s</td><td>ease</td><td>opacity</td><td>hover 时 opacity 降至 0.7 左右</td></tr>
+          <tr><td>导航按钮 (button)</td><td>0.2s</td><td>cubic-bezier(0.4, 0, 0.2, 1)</td><td>color, background-color, border-color, fill, stroke</td><td>Material Design 标准曲线</td></tr>
+          <tr><td>下拉菜单项</td><td>0.15s</td><td>ease</td><td>background, color</td><td>hover 时背景从透明 → #E5E7EB</td></tr>
+          <tr><td>H3 卡片标题</td><td>0.4s</td><td>ease</td><td>color</td><td>颜色缓慢变化，节奏感</td></tr>
+          <tr><td>图片 / Zoom</td><td>0.3s</td><td>cubic-bezier(0.2, 0, 0.2, 1)</td><td>transform</td><td>图片放大时弹性曲线</td></tr>
+          <tr><td>Hero 背景文字</td><td>20s</td><td>linear</td><td>transform: translateX</td><td>无限循环的横向 marquee（交替方向）</td></tr>
+          <tr><td>遮罩层 / Overlay</td><td>0.3s</td><td>ease</td><td>opacity</td><td>淡入淡出</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">5.2 交互状态详解</h3>
+      <div class="component-demo">
+        <div class="demo-label">导航按钮状态：Normal → Hover</div>
+        <div style="display:flex; gap:16px; align-items:center;">
+          <button class="ds-nav-btn" style="opacity:1;">Product (Normal)</button>
+          <span style="color:#999; font-size:14px;">→ 0.2s cubic-bezier →</span>
+          <button class="ds-nav-btn" style="opacity:0.7;">Product (Hover)</button>
+        </div>
+      </div>
+
+      <div class="component-demo">
+        <div class="demo-label">下拉菜单项：Normal → Hover</div>
+        <div style="display:flex; gap:16px; align-items:center;">
+          <a class="ds-nav-link" href="#">MiMo Code (Normal)</a>
+          <span style="color:#999; font-size:14px;">→ 0.15s ease →</span>
+          <a class="ds-nav-link" href="#" style="background:#E5E7EB;">MiMo Code (Hover)</a>
+        </div>
+      </div>
+
+      <div class="component-demo">
+        <div class="demo-label">卡片整体效果（产品卡 Hover）</div>
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <div class="ds-card" style="width:280px; min-height:150px;">
+            <div class="ds-card-content">
+              <div class="ds-card-title">Normal</div>
+              <div class="ds-card-subtitle">background: transparent / no shadow</div>
+            </div>
+          </div>
+          <div class="ds-card" style="width:280px; min-height:150px; opacity:0.9;">
+            <div class="ds-card-content">
+              <div class="ds-card-title" style="transition: color 0.4s ease;">Hover</div>
+              <div class="ds-card-subtitle">微透明 + 标题颜色缓动变化</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">5.3 滚动触发动效</h3>
+      <ul class="checklist">
+        <li>导航栏：position: sticky，top: 0，z-index: 20，滚动时持续吸顶</li>
+        <li>Hero 图案：6 行文字水平滚动（偶数行反向），营造视差背景</li>
+        <li>区块进入视口：卡片内容透明度 0 → 1，轻微向上位移（推测 16-24px）</li>
+        <li>产品卡 Hover：整体无位移，仅文字颜色和透明度微变</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 6. 空间关系 -->
+  <section id="spacing" class="ds-section">
+    <h2 class="ds-section-title">📏 六、空间关系与间距系统</h2>
+    <p class="ds-desc">
+      MiMo 采用基于 <strong>4px 倍数</strong> 的间距系统，关键间距值为 8 / 12 / 14 / 16 / 20 / 24 / 28 / 40。
+      整体留白比例较大，尤其 Hero 区域采用极端的「内容置底」布局，上方大量留白。
+    </p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">6.1 间距刻度表</h3>
+      <div class="spacing-demo">
+        <div class="spacing-block" style="height:4px;">4</div>
+        <div class="spacing-block" style="height:8px;">8</div>
+        <div class="spacing-block" style="height:12px;">12</div>
+        <div class="spacing-block" style="height:14px;">14</div>
+        <div class="spacing-block" style="height:16px;">16</div>
+        <div class="spacing-block" style="height:20px;">20</div>
+        <div class="spacing-block" style="height:24px;">24</div>
+        <div class="spacing-block" style="height:28px;">28</div>
+        <div class="spacing-block" style="height:32px;">32</div>
+        <div class="spacing-block" style="height:40px;">40</div>
+      </div>
+    </div>
+
+    <div class="ds-subsection" style="margin-top:40px;">
+      <h3 class="ds-subsection-title">6.2 元素间距规范</h3>
+      <table class="ds-table">
+        <thead>
+          <tr><th>元素</th><th>属性</th><th>数值</th><th>CSS 变量</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>H2 区块标题</td><td>下边距</td><td>0 (由父容器和分隔线控制)</td><td>--sp-0</td></tr>
+          <tr><td>H3 卡片标题</td><td>下边距</td><td>8px</td><td>--sp-2</td></tr>
+          <tr><td>卡片内 Padding (产品卡)</td><td>上/下/左/右</td><td>24px 28px</td><td>--sp-7 / --sp-8</td></tr>
+          <tr><td>卡片内 Padding (列表卡)</td><td>上/下/左/右</td><td>24px 20px</td><td>--sp-7 / --sp-6</td></tr>
+          <tr><td>Join Us 容器 Padding</td><td>上/下/左/右</td><td>40px 24px</td><td>--sp-10 / --sp-5</td></tr>
+          <tr><td>Hero 内容 Padding</td><td>上/右/下/左</td><td>18px 28px 14px 28px</td><td>个性化</td></tr>
+          <tr><td>导航按钮 Padding</td><td>上/下/左/右</td><td>8px 12px</td><td>--sp-2 / --sp-3</td></tr>
+          <tr><td>导航按钮 Margin</td><td>左/右</td><td>0 6px</td><td>个性化</td></tr>
+          <tr><td>下拉菜单项 Padding</td><td>上/下/左/右</td><td>8px 14px</td><td>--sp-2 / --sp-4</td></tr>
+          <tr><td>卡片之间分隔</td><td>border</td><td>1px 纯黑（上下）</td><td>--color-border-primary</td></tr>
+          <tr><td>H1 字间距</td><td>letter-spacing</td><td>1.12px</td><td>--ls-h1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">6.3 Hero 区域布局节奏</h3>
+      <div class="hero-preview" style="min-height:200px;">
+        <div class="hero-pattern">
+          <div class="hero-pattern-row"><span class="hero-pattern-text">MIMOMIMOMIMOMIMO</span></div>
+          <div class="hero-pattern-row"><span class="hero-pattern-text">MIMOMIMOMIMOMIMO</span></div>
+          <div class="hero-pattern-row"><span class="hero-pattern-text">MIMOMIMOMIMOMIMO</span></div>
+          <div class="hero-pattern-row"><span class="hero-pattern-text">MIMOMIMOMIMOMIMO</span></div>
+          <div class="hero-pattern-row"><span class="hero-pattern-text">MIMOMIMOMIMOMIMO</span></div>
+          <div class="hero-pattern-row"><span class="hero-pattern-text">MIMOMIMOMIMOMIMO</span></div>
+        </div>
+        <div class="hero-content-preview">
+          <div class="hero-h1" style="font-size:40px; line-height:68px;">HELLO, I'M MiMo</div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <strong>🎯 Hero 布局规则</strong>
+        <p>
+          1. 背景：6 行 "MIMO" 文字，透明度约 8%，奇偶数行反向水平滚动<br>
+          2. 主标题对齐：<strong>底部对齐</strong>，上方留出约 60% 空白<br>
+          3. 主标题外框：上下各一条 1px 纯黑实线，形成「画框感」<br>
+          4. 内容 Padding：上 18px，左右 28px，下 14px
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 7. 组件规范 -->
+  <section id="components" class="ds-section">
+    <h2 class="ds-section-title">🧩 七、核心组件规范</h2>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">7.1 顶部导航栏 (Navbar)</h3>
+      <div class="nav-preview">
+        <div class="nav-logo">Xiaomi MiMo</div>
+        <div class="nav-items">
+          <button class="ds-nav-btn">Product ▾</button>
+          <button class="ds-nav-btn">Research ▾</button>
+          <a href="#join" class="ds-nav-btn" style="text-decoration:none;">Join Us</a>
+        </div>
+      </div>
+      <div style="border:1px solid var(--color-border-secondary); border-top:none; padding: var(--sp-5); background:var(--color-bg-secondary); border-radius: 0 0 var(--radius-sm) var(--radius-sm);">
+<pre class="code-block" style="margin:0; padding:20px; font-size:12px;"><code><span class="code-prop">.navbar</span> {
+  <span class="code-prop">position</span>: <span class="code-value">sticky</span>;
+  <span class="code-prop">top</span>: <span class="code-value">0</span>;
+  <span class="code-prop">z-index</span>: <span class="code-value">20</span>;
+  <span class="code-prop">height</span>: <span class="code-value">56px</span>;
+  <span class="code-prop">background</span>: <span class="code-value">#FFFFFF</span>;
+  <span class="code-prop">display</span>: <span class="code-value">flex</span>;
+  <span class="code-prop">align-items</span>: <span class="code-value">center</span>;
+}
+<span class="code-prop">.nav-item</span> {
+  <span class="code-prop">font-size</span>: <span class="code-value">15px</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">500</span>;
+  <span class="code-prop">padding</span>: <span class="code-value">8px 12px</span>;
+  <span class="code-prop">margin</span>: <span class="code-value">0 6px</span>;
+  <span class="code-prop">transition</span>: <span class="code-value">color .2s var(--ease-standard),
+    background-color .2s var(--ease-standard)</span>;
+}</code></pre>
+      </div>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">7.2 产品展示卡片 (Product Card)</h3>
+      <div class="ds-card" style="min-height:250px;">
+        <div class="ds-card-content">
+          <div class="ds-card-title">Xiaomi MiMo-V2.5-Pro</div>
+          <div class="ds-card-subtitle">A leap in agentic and long horizon coherence.</div>
+        </div>
+      </div>
+<pre class="code-block" style="margin-top:16px;"><code><span class="code-prop">.product-card</span> {
+  <span class="code-prop">border-top</span>: <span class="code-value">1px solid #000</span>;
+  <span class="code-prop">border-bottom</span>: <span class="code-value">1px solid #000</span>;
+  <span class="code-prop">min-height</span>: <span class="code-value">312px</span>;
+  <span class="code-prop">cursor</span>: <span class="code-value">pointer</span>;
+  <span class="code-prop">display</span>: <span class="code-value">flex</span>;
+  <span class="code-prop">align-items</span>: <span class="code-value">flex-end</span>;
+  <span class="code-prop">transition</span>: <span class="code-value">color .4s ease, opacity .2s ease</span>;
+}
+<span class="code-prop">.product-card__title</span> {
+  <span class="code-prop">font-size</span>: <span class="code-value">24px</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">600</span>;
+  <span class="code-prop">line-height</span>: <span class="code-value">31.2px</span>;
+  <span class="code-prop">letter-spacing</span>: <span class="code-value">0.24px</span>;
+}
+<span class="code-prop">.product-card__subtitle</span> {
+  <span class="code-prop">font-size</span>: <span class="code-value">13px</span>;
+  <span class="code-prop">color</span>: <span class="code-value">rgba(0,0,0,0.4)</span>;
+  <span class="code-prop">line-height</span>: <span class="code-value">19.5px</span>;
+}
+<span class="code-prop">.product-card__content</span> {
+  <span class="code-prop">padding</span>: <span class="code-value">24px 28px</span>;
+  <span class="code-prop">width</span>: <span class="code-value">100%</span>;
+}</code></pre>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">7.3 列表式卡片 (List Card - Paper/Blog)</h3>
+      <div class="ds-list-card">
+        <div class="ds-list-title">"MOPD: Multi-Teacher On-Policy Distillation for Capability Integration"</div>
+        <div class="ds-list-desc">June 29, 2026</div>
+      </div>
+<pre class="code-block" style="margin-top:16px;"><code><span class="code-prop">.list-card</span> {
+  <span class="code-prop">padding</span>: <span class="code-value">24px 20px</span>;
+  <span class="code-prop">cursor</span>: <span class="code-value">pointer</span>;
+  <span class="code-prop">transition</span>: <span class="code-value">background-color .2s ease</span>;
+}
+<span class="code-prop">.list-card:hover</span> {
+  <span class="code-prop">background-color</span>: <span class="code-value">rgba(0,0,0,0.02)</span>;
+}
+<span class="code-prop">.list-card__title</span> {
+  <span class="code-prop">font-size</span>: <span class="code-value">20px</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">600</span>;
+  <span class="code-prop">line-height</span>: <span class="code-value">26px</span>;
+  <span class="code-prop">margin-bottom</span>: <span class="code-value">8px</span>;
+  <span class="code-prop">color</span>: <span class="code-value">#000</span>;
+  <span class="code-prop">transition</span>: <span class="code-value">color .4s ease</span>;
+}
+<span class="code-prop">.list-card__desc</span> {
+  <span class="code-prop">font-size</span>: <span class="code-value">14px</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">400</span>;
+  <span class="code-prop">line-height</span>: <span class="code-value">21px</span>;
+  <span class="code-prop">color</span>: <span class="code-value">#666</span>;
+}</code></pre>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">7.4 Hero 主视觉</h3>
+<pre class="code-block"><code><span class="code-prop">.hero</span> {
+  <span class="code-prop">position</span>: <span class="code-value">relative</span>;
+  <span class="code-prop">height</span>: <span class="code-value">600px</span>;
+  <span class="code-prop">background-color</span>: <span class="code-value">#FAF7F5</span>;
+  <span class="code-prop">border-top</span>: <span class="code-value">1px solid #000</span>;
+  <span class="code-prop">border-bottom</span>: <span class="code-value">1px solid #000</span>;
+  <span class="code-prop">overflow</span>: <span class="code-value">hidden</span>;
+}
+<span class="code-prop">.hero__pattern-row</span> {
+  <span class="code-prop">font-family</span>: <span class="code-value">'MiSans-Bold', sans-serif</span>;
+  <span class="code-prop">font-size</span>: <span class="code-value">120px</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">700</span>;
+  <span class="code-prop">letter-spacing</span>: <span class="code-value">12px</span>;
+  <span class="code-prop">color</span>: <span class="code-value">#000</span>;
+  <span class="code-prop">opacity</span>: <span class="code-value">0.08</span>;
+  <span class="code-prop">white-space</span>: <span class="code-value">nowrap</span>;
+  <span class="code-prop">animation</span>: <span class="code-value">hero-marquee 20s linear infinite</span>;
+}
+<span class="code-prop">.hero__pattern-row:nth-child(even)</span> {
+  <span class="code-prop">animation-direction</span>: <span class="code-value">reverse</span>;
+}
+<span class="code-prop">.hero__title</span> {
+  <span class="code-prop">position</span>: <span class="code-value">absolute</span>;
+  <span class="code-prop">left</span>: <span class="code-value">28px</span>;
+  <span class="code-prop">bottom</span>: <span class="code-value">14px</span>;
+  <span class="code-prop">font-size</span>: <span class="code-value">56px</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">700</span>;
+  <span class="code-prop">line-height</span>: <span class="code-value">95.2px</span>;
+  <span class="code-prop">letter-spacing</span>: <span class="code-value">1.12px</span>;
+  <span class="code-prop">z-index</span>: <span class="code-value">1</span>;
+}</code></pre>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 8. 响应式设计 -->
+  <section id="responsive" class="ds-section">
+    <h2 class="ds-section-title">📱 八、响应式设计规范</h2>
+<pre class="code-block"><code><span class="code-comment">/* ====== 响应式断点 (Mobile First) ====== */</span>
+
+<span class="code-comment">/* 移动端 ≤ 480px 默认样式 (无需媒体查询) */</span>
+<span class="code-prop">.container</span> { <span class="code-prop">padding</span>: <span class="code-value">0 24px</span>; }
+<span class="code-prop">.hamburger</span> { <span class="code-prop">display</span>: <span class="code-value">block</span>; }
+<span class="code-prop">.nav-desktop</span> { <span class="code-prop">display</span>: <span class="code-value">none</span>; }
+<span class="code-prop">.hero__title</span> { <span class="code-prop">font-size</span>: <span class="code-value">40px</span>; <span class="code-prop">line-height</span>: <span class="code-value">68px</span>; }
+
+<span class="code-comment">/* Tablet ≥ 768px */</span>
+<span class="code-var">@media</span> (<span class="code-prop">min-width</span>: <span class="code-value">768px</span>) {
+  <span class="code-prop">.container</span> { <span class="code-prop">padding</span>: <span class="code-value">0 28px</span>; }
+  <span class="code-prop">.product-cards</span> { <span class="code-prop">display</span>: <span class="code-value">grid</span>; <span class="code-prop">grid-template-columns</span>: <span class="code-value">repeat(2, 1fr)</span>; }
+}
+
+<span class="code-comment">/* Laptop ≥ 1024px */</span>
+<span class="code-var">@media</span> (<span class="code-prop">min-width</span>: <span class="code-value">1024px</span>) {
+  <span class="code-prop">.hamburger</span> { <span class="code-prop">display</span>: <span class="code-value">none</span>; }
+  <span class="code-prop">.nav-desktop</span> { <span class="code-prop">display</span>: <span class="code-value">flex</span>; }
+  <span class="code-prop">.hero__title</span> { <span class="code-prop">font-size</span>: <span class="code-value">56px</span>; <span class="code-prop">line-height</span>: <span class="code-value">95.2px</span>; }
+}
+
+<span class="code-comment">/* Desktop ≥ 1200px */</span>
+<span class="code-var">@media</span> (<span class="code-prop">min-width</span>: <span class="code-value">1200px</span>) {
+  <span class="code-prop">.container</span> { <span class="code-prop">max-width</span>: <span class="code-value">1200px</span>; <span class="code-prop">margin</span>: <span class="code-value">0 auto</span>; }
+  <span class="code-prop">.list-cards--blog</span> { <span class="code-prop">display</span>: <span class="code-value">grid</span>; <span class="code-prop">grid-template-columns</span>: <span class="code-value">repeat(2, 1fr)</span>; <span class="code-prop">gap</span>: <span class="code-value">0</span>; }
+}
+
+<span class="code-comment">/* Wide ≥ 1440px */</span>
+<span class="code-var">@media</span> (<span class="code-prop">min-width</span>: <span class="code-value">1440px</span>) {
+  <span class="code-prop">.container</span> { <span class="code-prop">max-width</span>: <span class="code-value">1440px</span>; }
+}</code></pre>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 9. 一致性检查清单 -->
+  <section id="checklist" class="ds-section">
+    <h2 class="ds-section-title">✅ 九、设计一致性检查清单</h2>
+    <p class="ds-desc">在个人网站实现完成后，逐项对照以下清单，确保视觉风格和交互体验与 MiMo 官网保持高度一致。</p>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">9.1 色彩一致性</h3>
+      <ul class="checklist">
+        <li>页面主背景色为 #FAF7F5（非纯白 #FFFFFF）</li>
+        <li>区块/产品卡片之间使用 1px 纯黑实线分隔</li>
+        <li>标题文字均为 #000000，未使用深蓝或其他颜色</li>
+        <li>副标题使用 #666666 或 rgba(0,0,0,0.4)，深浅符合层级</li>
+        <li>强调色 #5ED4AD / 蓝色渐变占比不超过 5%</li>
+        <li>导航栏使用白底/透明，与 Hero 有明显区分</li>
+      </ul>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">9.2 字体一致性</h3>
+      <ul class="checklist">
+        <li>Hero 主标题字号 56px（桌面端），字重 700，行高 95.2px，字间距 1.12px</li>
+        <li>区块大标题统一 40px / 700 / line-height 68px</li>
+        <li>产品卡片标题 24px / 600，Paper/Blog 列表标题 20px / 600</li>
+        <li>产品卡片副标题 13px rgba(0,0,0,0.4)，列表卡片副标题 14px #666666</li>
+        <li>所有文字已设置 MiSans 回退字体链，兼容各种系统</li>
+        <li>大、小标题颜色为纯黑 #000000，未出现蓝色链接色</li>
+      </ul>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">9.3 布局/间距一致性</h3>
+      <ul class="checklist">
+        <li>导航栏高度 56px，sticky 吸顶，z-index ≥ 20</li>
+        <li>Hero 区高度 600px，上下有 1px 纯黑边框，标题底对齐</li>
+        <li>Hero 背景包含 6 行 MIMO 滚动图案（奇偶数行反向）</li>
+        <li>产品卡上下 padding 24px、左右 28px；列表卡左右 20px</li>
+        <li>列表卡片标题下方 margin 为 8px，与副标题间距正确</li>
+        <li>卡片之间无线性灰色分割线，而是继承父背景，保持干净</li>
+        <li>所有间距均使用 4px 的倍数，未出现 3/5/7 等奇数像素</li>
+      </ul>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">9.4 交互/动效一致性</h3>
+      <ul class="checklist">
+        <li>导航按钮 hover 时透明度下降至约 0.7，0.2s 过渡</li>
+        <li>下拉菜单项 hover 时背景变 #E5E7EB，0.15s 过渡 + 8px 圆角</li>
+        <li>卡片整体 hover 无位移/缩放，仅颜色/透明度微变 0.4s</li>
+        <li>导航栏无阴影 (box-shadow: none)，极简不抢视觉</li>
+        <li>卡片无圆角 (border-radius: 0) 或极小圆角，避免「圆润」</li>
+        <li>产品图片 hover 时如有放大，使用 cubic-bezier(0.2,0,0.2,1) 曲线</li>
+        <li>页面滚动时导航栏保持吸顶不抖动</li>
+      </ul>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">9.5 响应式一致性</h3>
+      <ul class="checklist">
+        <li>≤ 480px 宽度时 Hamburger 菜单可见，桌面导航隐藏</li>
+        <li>移动端 Hero 标题缩小至约 40px，不产生横向滚动条</li>
+        <li>移动端卡片 Padding 调整至 24px，不溢出视口</li>
+        <li>在 375px (iPhone SE) 下测试无错位问题</li>
+        <li>≥ 1024px 时恢复完整桌面导航和大字号</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 10. 技术建议 -->
+  <section id="tech" class="ds-section">
+    <h2 class="ds-section-title">⚙️ 十、技术建议与注意事项</h2>
+
+    <div class="tip-box">
+      <strong>🎯 实现顺序建议</strong>
+      <p>
+        第一步：CSS 变量定义 → 第二步：基础样式 reset + 全局字体背景 → 第三步：Navbar 组件
+        → 第四步：Hero 区域（含背景动画） → 第五步：产品卡片组 → 第六步：列表卡片（Paper/Blog）
+        → 第七步：Join Us → 第八步：响应式适配
+      </p>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">10.1 技术栈建议</h3>
+      <table class="ds-table">
+        <thead><tr><th>层级</th><th>推荐方案</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>结构</td><td>HTML5 + Semantic 标签</td><td>section/header/nav/article 语义化，利于 SEO</td></tr>
+          <tr><td>样式</td><td>CSS3 + CSS Variables</td><td>零依赖，便于使用本规范的变量集</td></tr>
+          <tr><td>字体</td><td>MiSans CDN + 系统回退</td><td>小米官方字体可用 CDN；回退链确保兼容</td></tr>
+          <tr><td>动画</td><td>CSS Keyframes + Transitions</td><td>Hero 背景滚动和状态变化均可用纯 CSS 实现</td></tr>
+          <tr><td>可选增强</td><td>IntersectionObserver</td><td>实现滚动触发的卡片淡入动效</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">10.2 常见陷阱与规避</h3>
+      <ul class="checklist">
+        <li><strong>陷阱：</strong>背景用了 #FFFFFF 而不是 #FAF7F5，感觉「太冷太硬」</li>
+        <li><strong>陷阱：</strong>Hero 标题居中对齐而不是底部对齐，失去了独特的节奏感</li>
+        <li><strong>陷阱：</strong>卡片加了 8px+ 的圆角或阴影，变成「电商风」而不是「极简科技风」</li>
+        <li><strong>陷阱：</strong>过度使用过渡效果（3D transform / 弹跳），破坏克制的基调</li>
+        <li><strong>陷阱：</strong>产品卡之间使用浅灰分隔线，弱化了高级感。必须用 1px 纯黑实线！</li>
+        <li><strong>陷阱：</strong>Hero 背景图案只做了一行或透明度过高/过低，没有层次感</li>
+        <li><strong>陷阱：</strong>「Join Us」链接使用了蓝色链接色，应该继承黑色文字</li>
+      </ul>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">10.3 MiSans 字体加载方案</h3>
+<pre class="code-block"><code><span class="code-comment">&lt;!-- 方案 A：使用 CDN 加载 MiSans (推荐) --&gt;</span>
+<span class="code-var">&lt;link</span> <span class="code-prop">rel</span>=<span class="code-value">"stylesheet"</span>
+  <span class="code-prop">href</span>=<span class="code-value">"https://font.sec.miui.com/font/css?family=MiSans:400,500,600,700&display=swap"</span><span class="code-var">&gt;</span>
+
+<span class="code-comment">/* 方案 B：使用 @font-face 本地托管 */</span>
+<span class="code-var">@font-face</span> {
+  <span class="code-prop">font-family</span>: <span class="code-value">'MiSans'</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">400</span>;
+  <span class="code-prop">src</span>: <span class="code-value">url('/fonts/MiSans-Regular.woff2') format('woff2')</span>;
+  <span class="code-prop">font-display</span>: <span class="code-value">swap</span>;
+}
+<span class="code-var">@font-face</span> {
+  <span class="code-prop">font-family</span>: <span class="code-value">'MiSans'</span>;
+  <span class="code-prop">font-weight</span>: <span class="code-value">600</span>;
+  <span class="code-prop">src</span>: <span class="code-value">url('/fonts/MiSans-Semibold.woff2') format('woff2')</span>;
+  <span class="code-prop">font-display</span>: <span class="code-value">swap</span>;
+}</code></pre>
+    </div>
+
+    <div class="ds-subsection">
+      <h3 class="ds-subsection-title">10.4 性能优化建议</h3>
+      <ul class="checklist">
+        <li>字体使用 font-display: swap，避免 FOIT（隐形文字）</li>
+        <li>Hero 背景动画使用 transform + GPU 加速，避免重绘</li>
+        <li>CSS 文件大小控制在 30KB 以内</li>
+        <li>Hero 图片使用 webp / avif 格式，响应式 srcset</li>
+        <li>scroll 事件监听器使用 passive: true</li>
+        <li>IntersectionObserver 用于触发懒加载和进场动画</li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="ds-rule">
+
+  <!-- 11. CSS 变量全集 -->
+  <section id="css" class="ds-section">
+    <h2 class="ds-section-title">💻 十一、CSS 变量全集（可直接复制使用）</h2>
+    <p class="ds-desc">将以下 :root 变量块复制到你项目的 CSS 文件顶部，即可通过 var() 调用所有规范参数。</p>
+<pre class="code-block"><code><span class="code-comment">/* ============================================================
+   MiMo Design System - CSS Variables
+   基于 https://mimo.xiaomi.com 实际测量
+   ============================================================ */</span>
+<span class="code-var">:root</span> {
+  <span class="code-comment">/* ===== 色彩系统 ===== */</span>
+  <span class="code-prop">--color-bg-primary</span>:    <span class="code-value">#FAF7F5</span>;  <span class="code-comment">/* 主背景 RGB(250,247,245) */</span>
+  <span class="code-prop">--color-bg-secondary</span>:  <span class="code-value">#FFFFFF</span>;  <span class="code-comment">/* 次背景 纯白 */</span>
+  <span class="code-prop">--color-bg-tertiary</span>:   <span class="code-value">#222427</span>;  <span class="code-comment">/* 深色背景 */</span>
+
+  <span class="code-prop">--color-text-primary</span>:       <span class="code-value">#000000</span>;          <span class="code-comment">/* 标题 */</span>
+  <span class="code-prop">--color-text-secondary</span>:     <span class="code-value">#213547</span>;          <span class="code-comment">/* 正文 */</span>
+  <span class="code-prop">--color-text-tertiary</span>:      <span class="code-value">#333333</span>;          <span class="code-comment">/* 次正文 */</span>
+  <span class="code-prop">--color-text-muted</span>:         <span class="code-value">#666666</span>;          <span class="code-comment">/* 辅助 */</span>
+  <span class="code-prop">--color-text-subtle</span>:        <span class="code-value">#999999</span>;          <span class="code-comment">/* 弱化 */</span>
+  <span class="code-prop">--color-text-ultra-subtle</span>: <span class="code-value">rgba(0,0,0,0.4)</span>; <span class="code-comment">/* 极弱 */</span>
+  <span class="code-prop">--color-text-inverse</span>:       <span class="code-value">#F5F9FE</span>;          <span class="code-comment">/* 深色底上的文字 */</span>
+
+  <span class="code-prop">--color-accent-teal</span>:  <span class="code-value">#5ED4AD</span>;  <span class="code-comment">/* 青绿强调 */</span>
+  <span class="code-prop">--color-accent-blue</span>:  <span class="code-value">#0066FF</span>;  <span class="code-comment">/* 渐变起点蓝 */</span>
+  <span class="code-prop">--color-accent-cyan</span>:  <span class="code-value">#00AAFF</span>;  <span class="code-comment">/* 渐变终点青 */</span>
+  <span class="code-prop">--gradient-accent-blue</span>:
+    <span class="code-value">linear-gradient(90deg, #0066FF, #00AAFF)</span>;
+
+  <span class="code-prop">--color-border-primary</span>:   <span class="code-value">#000000</span>;          <span class="code-comment">/* 主分隔 1px 黑 */</span>
+  <span class="code-prop">--color-border-secondary</span>: <span class="code-value">#E5E7EB</span>;          <span class="code-comment">/* 次分隔 浅灰 */</span>
+  <span class="code-prop">--color-border-tertiary</span>:  <span class="code-value">rgba(60,60,60,0.1)</span>; <span class="code-comment">/* 极弱 */</span>
+
+  <span class="code-comment">/* ===== 字体系统 ===== */</span>
+  <span class="code-prop">--font-family-display</span>:
+    <span class="code-value">'MiSans-Bold', 'MiSans-Semibold', 'MiSans-Regular',
+    'NotoSerifSC', -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'Helvetica Neue', sans-serif</span>;
+  <span class="code-prop">--font-family-heading</span>:
+    <span class="code-value">'MiSans-Semibold', 'MiSans-Regular', -apple-system,
+    BlinkMacSystemFont, 'PingFang SC', sans-serif</span>;
+  <span class="code-prop">--font-family-body</span>:
+    <span class="code-value">'MiSans-Regular', -apple-system, BlinkMacSystemFont,
+    'PingFang SC', 'Microsoft YaHei', sans-serif</span>;
+  <span class="code-prop">--font-family-medium</span>:
+    <span class="code-value">'MiSans-Medium', 'MiSans-Regular', sans-serif</span>;
+  <span class="code-prop">--font-family-mono</span>:
+    <span class="code-value">'SF Mono', Menlo, Consolas, 'Courier New', monospace</span>;
+
+  <span class="code-comment">/* 字号 - 从大到小 */</span>
+  <span class="code-prop">--fs-h1</span>:         <span class="code-value">56px</span>;   <span class="code-comment">/* Hero 标题 */</span>
+  <span class="code-prop">--fs-h2</span>:         <span class="code-value">40px</span>;   <span class="code-comment">/* 区块标题 */</span>
+  <span class="code-prop">--fs-h3-product</span>: <span class="code-value">24px</span>;   <span class="code-comment">/* 产品卡标题 */</span>
+  <span class="code-prop">--fs-h3</span>:         <span class="code-value">20px</span>;   <span class="code-comment">/* 列表卡标题 */</span>
+  <span class="code-prop">--fs-h3-job</span>:     <span class="code-value">17px</span>;   <span class="code-comment">/* 职位卡标题 */</span>
+  <span class="code-prop">--fs-body-lg</span>:    <span class="code-value">16px</span>;   <span class="code-comment">/* 大正文 */</span>
+  <span class="code-prop">--fs-body</span>:       <span class="code-value">15px</span>;   <span class="code-comment">/* 正文 */</span>
+  <span class="code-prop">--fs-body-sm</span>:    <span class="code-value">14px</span>;   <span class="code-comment">/* 小正文/副信息 */</span>
+  <span class="code-prop">--fs-caption</span>:     <span class="code-value">13px</span>;   <span class="code-comment">/* 说明/日期 */</span>
+  <span class="code-prop">--fs-nav</span>:        <span class="code-value">15px</span>;   <span class="code-comment">/* 导航栏 */</span>
+
+  <span class="code-comment">/* 行高 */</span>
+  <span class="code-prop">--lh-h1</span>:         <span class="code-value">95.2px</span>;
+  <span class="code-prop">--lh-h2</span>:         <span class="code-value">68px</span>;
+  <span class="code-prop">--lh-h3-product</span>: <span class="code-value">31.2px</span>;
+  <span class="code-prop">--lh-h3</span>:         <span class="code-value">26px</span>;
+  <span class="code-prop">--lh-h3-job</span>:     <span class="code-value">28.9px</span>;
+  <span class="code-prop">--lh-body-lg</span>:    <span class="code-value">27.2px</span>;
+  <span class="code-prop">--lh-body</span>:       <span class="code-value">25.5px</span>;
+  <span class="code-prop">--lh-body-sm</span>:    <span class="code-value">21px</span>;
+  <span class="code-prop">--lh-caption</span>:     <span class="code-value">19.5px</span>;
+
+  <span class="code-comment">/* 字重 */</span>
+  <span class="code-prop">--fw-bold</span>:     <span class="code-value">700</span>;
+  <span class="code-prop">--fw-semibold</span>: <span class="code-value">600</span>;
+  <span class="code-prop">--fw-medium</span>:   <span class="code-value">500</span>;
+  <span class="code-prop">--fw-regular</span>:  <span class="code-value">400</span>;
+
+  <span class="code-comment">/* 字间距 */</span>
+  <span class="code-prop">--ls-h1</span>:         <span class="code-value">1.12px</span>;
+  <span class="code-prop">--ls-h3-product</span>: <span class="code-value">0.24px</span>;
+  <span class="code-prop">--ls-normal</span>:     <span class="code-value">normal</span>;
+
+  <span class="code-comment">/* ===== 间距 (4px 基数) ===== */</span>
+  <span class="code-prop">--sp-1</span>:  <span class="code-value">4px</span>;
+  <span class="code-prop">--sp-2</span>:  <span class="code-value">8px</span>;
+  <span class="code-prop">--sp-3</span>:  <span class="code-value">12px</span>;
+  <span class="code-prop">--sp-4</span>:  <span class="code-value">14px</span>;
+  <span class="code-prop">--sp-5</span>:  <span class="code-value">16px</span>;
+  <span class="code-prop">--sp-6</span>:  <span class="code-value">20px</span>;
+  <span class="code-prop">--sp-7</span>:  <span class="code-value">24px</span>;
+  <span class="code-prop">--sp-8</span>:  <span class="code-value">28px</span>;
+  <span class="code-prop">--sp-9</span>:  <span class="code-value">32px</span>;
+  <span class="code-prop">--sp-10</span>: <span class="code-value">40px</span>;
+  <span class="code-prop">--sp-11</span>: <span class="code-value">56px</span>;
+  <span class="code-prop">--sp-12</span>: <span class="code-value">68px</span>;
+
+  <span class="code-comment">/* ===== 圆角 / 阴影 ===== */</span>
+  <span class="code-prop">--radius-none</span>: <span class="code-value">0</span>;
+  <span class="code-prop">--radius-sm</span>:   <span class="code-value">8px</span>;
+  <span class="code-prop">--radius-md</span>:   <span class="code-value">12px</span>;
+  <span class="code-prop">--shadow-none</span>:     <span class="code-value">none</span>;
+  <span class="code-prop">--shadow-soft</span>:     <span class="code-value">0 1px 3px rgba(0,0,0,0.06)</span>;
+
+  <span class="code-comment">/* ===== 动效 ===== */</span>
+  <span class="code-prop">--transition-fast</span>:   <span class="code-value">0.15s</span>;
+  <span class="code-prop">--transition-normal</span>: <span class="code-value">0.2s</span>;
+  <span class="code-prop">--transition-medium</span>: <span class="code-value">0.3s</span>;
+  <span class="code-prop">--transition-slow</span>:   <span class="code-value">0.4s</span>;
+  <span class="code-prop">--ease-standard</span>:     <span class="code-value">cubic-bezier(0.4, 0, 0.2, 1)</span>;
+  <span class="code-prop">--ease-smooth</span>:       <span class="code-value">ease</span>;
+  <span class="code-prop">--ease-elastic</span>:      <span class="code-value">cubic-bezier(0.2, 0, 0.2, 1)</span>;
+
+  <span class="code-comment">/* ===== 布局 ===== */</span>
+  <span class="code-prop">--nav-height</span>:              <span class="code-value">56px</span>;
+  <span class="code-prop">--hero-height</span>:             <span class="code-value">600px</span>;
+  <span class="code-prop">--card-product-height</span>:    <span class="code-value">312px</span>;
+  <span class="code-prop">--container-padding-sm</span>:     <span class="code-value">24px</span>;
+  <span class="code-prop">--container-padding-lg</span>:     <span class="code-value">28px</span>;
+
+  <span class="code-comment">/* ===== 响应式断点 ===== */</span>
+  <span class="code-prop">--bp-mobile</span>:   <span class="code-value">480px</span>;
+  <span class="code-prop">--bp-tablet</span>:   <span class="code-value">768px</span>;
+  <span class="code-prop">--bp-laptop</span>:   <span class="code-value">1024px</span>;
+  <span class="code-prop">--bp-desktop</span>:  <span class="code-value">1200px</span>;
+  <span class="code-prop">--bp-wide</span>:     <span class="code-value">1440px</span>;
+
+  <span class="code-comment">/* ===== Z-Index ===== */</span>
+  <span class="code-prop">--z-nav</span>:     <span class="code-value">20</span>;
+  <span class="code-prop">--z-overlay</span>: <span class="code-value">50</span>;
+  <span class="code-prop">--z-modal</span>:   <span class="code-value">100</span>;
+}
+
+<span class="code-comment">/* ===== 辅助: 颜色对比 / 无障碍 ===== */</span>
+<span class="code-var">@media</span> (<span class="code-prop">prefers-reduced-motion</span>: <span class="code-value">reduce</span>) {
+  <span class="code-prop">*</span> {
+    <span class="code-prop">animation-duration</span>: <span class="code-value">0.01ms !important</span>;
+    <span class="code-prop">animation-iteration-count</span>: <span class="code-value">1 !important</span>;
+    <span class="code-prop">transition-duration</span>: <span class="code-value">0.01ms !important</span>;
+  }
+}</code></pre>
+    </div>
+  </section>
+
+  <div style="padding:48px 0; text-align:center; color:#999; font-size:13px; border-top:1px solid #E5E7EB; margin-top:80px;">
+    <p style="margin-bottom:8px;">MiMo Design System | 版本 1.0 | 基于实际页面测量生成</p>
+    <p>生成日期 2026-08-01 | 仅供学习与个人项目参考使用</p>
+  </div>
+
+</div>
+
+</body>
+</html>
